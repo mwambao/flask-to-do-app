@@ -1,0 +1,31 @@
+
+<h1>Add a Task</h1>
+<form method="POST" action="/">
+    <p>
+        <input type="text" name="task"/>
+    </p>
+
+    <p>
+        <label for="status"> Select the status:</label><br><br>
+        <!-- Here I am using select element to create a drop downlist, id attribute associate each with the a label-->
+        <select name="status" id="status">
+            <option value="Not Started">Not Started</option>
+            <option value="Started">Started</option>
+            <option value="In Progress">In progress</option>
+            <option value="Completed">Completed</option>
+        </select>
+    </p>
+        
+<p>
+    <input type="submit" value="Add">
+</p>
+
+    
+</form>
+
+<h1>Tasks</h1>
+
+    {% for task in tasks %}
+     <p>{{task.task}}</p>
+     <p>{{task.status}}</p>
+    {% endfor %}
