@@ -26,6 +26,25 @@
 <h1>Tasks</h1>
 
     {% for task in tasks %}
-     <p>{{task.task}}</p>
+    <h3><p>{{task.task}}</p></h3> 
      <p>{{task.status}}</p>
+
+     <form method="POST" action="./update">
+         <input type="hidden" value="{{task.task}}" name="oldtask">
+         <input type="text" value="{{task.task}}" name="newtask">
+         <input type="hidden" value="{{task.status}}" name="oldstatus">     
+        <select name="newstatus" id="status">
+            <option value="Not Started">Not Started</option>
+            <option value="Started">Started</option>
+            <option value="In Progress">In progress</option>
+            <option value="Completed">Completed</option>
+        </select> 
+         <input type="submit" value="Update">               
+     </form>
+
+     <form method="POST" action="./delete">
+         <input type="hidden" value="{{task.task}}" name="task">
+         <input type="submit" value="Delete">
+
+     </form>
     {% endfor %}
