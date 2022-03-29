@@ -1,9 +1,7 @@
 
-from enum import unique
 import os
 
-
-from flask import Flask, render_template, request
+from flask import Flask, redirect, render_template, request
 
 from flask_sqlalchemy import SQLAlchemy
 
@@ -20,22 +18,43 @@ class Tasks(db.Model):
     task = db.Column(db.String(80), unique=True, nullable=False, primary_key=True)
     status = db.Column(db.String(80))
 
- #   def __repr__(self):
- #     return "<Task: {}>".format(self.task)
+    def __init__(self, task, status):
+        self.task = task
+        self.status = status
 
 
 @app.route("/", methods=["GET", "POST"])
 def home():
     if request.form:
-        task = Tasks(task=request.form.get("task"))
-        status = Tasks(status=request.form.get("status"))
+        task = Tasks(request.form.get("task"), request.form.get("status"))
 
-        db.session.add(task,status)
+        db.session.add(task)
         db.session.commit()
 
     tasks = Tasks.query.all()
     return render_template("home.html", tasks=tasks)
 
+@app.route("/update", methods=["POST"])
+def update():
+    newtask = request.form.get("newtask")
+    oldtask = request.form.get("oldtask")
+
+    newstatus = request.form.get("newstatus")
+    oldstatus = request.form.get("oldstatus")
+
+    task = Tasks.query.filter_by(task=oldtask, status=oldstatus).first()
+    task.task = newtask
+    task.status = newstatus
+    db.session.commit()
+    return redirect("/")
+
+@app.route("/delete", methods=["POST"])
+def delete():
+    task = request.form.get("task")
+    task = Tasks.query.filter_by(task=task).first()
+    db.session.delete(task)
+    db.session.commit()
+    return redirect("/")
 
 
 if __name__=="__main__":
